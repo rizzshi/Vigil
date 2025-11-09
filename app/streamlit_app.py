@@ -632,6 +632,57 @@ date,revenue,customer_acquisition,churn_rate
                 # Generate Report button
                 st.subheader("📄 Generate PDF Report")
                 
+                # Export options
+                export_cols = st.columns(3)
+                
+                with export_cols[0]:
+                    if st.button("📥 Export Anomalies (CSV)", use_container_width=True):
+                        if anomaly_summary['details']:
+                            export_df = pd.DataFrame(anomaly_summary['details'])
+                            csv = export_df.to_csv(index=False)
+                            st.download_button(
+                                label="Download CSV",
+                                data=csv,
+                                file_name=f"anomalies_{datetime.now().strftime('%Y%m%d')}.csv",
+                                mime="text/csv",
+                                use_container_width=True
+                            )
+                        else:
+                            st.warning("No anomalies to export")
+                
+                with export_cols[1]:
+                    if st.button("📊 Export KPI Stats (CSV)", use_container_width=True):
+                        csv = kpi_stats.to_csv(index=False)
+                        st.download_button(
+                            label="Download CSV",
+                            data=csv,
+                            file_name=f"kpi_stats_{datetime.now().strftime('%Y%m%d')}.csv",
+                            mime="text/csv",
+                            use_container_width=True
+                        )
+                
+                with export_cols[2]:
+                    if st.button("📋 Export Full Report (JSON)", use_container_width=True):
+                        report_json = {
+                            "generated_at": datetime.now().isoformat(),
+                            "anomaly_summary": {
+                                "total": anomaly_summary['total_anomalies'],
+                                "severity": anomaly_summary['severity'],
+                                "affected_kpis": anomaly_summary['affected_kpis']
+                            },
+                            "narrative": narrative,
+                            "anomalies": anomaly_summary['details']
+                        }
+                        import json
+                        json_str = json.dumps(report_json, indent=2, default=str)
+                        st.download_button(
+                            label="Download JSON",
+                            data=json_str,
+                            file_name=f"vigil_report_{datetime.now().strftime('%Y%m%d')}.json",
+                            mime="application/json",
+                            use_container_width=True
+                        )
+                
                 if st.button("Generate PDF Report", type="primary", use_container_width=True):
                     
                     with st.spinner("Generating PDF report..."):

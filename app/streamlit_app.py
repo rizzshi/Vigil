@@ -470,6 +470,8 @@ date,revenue,customer_acquisition,churn_rate
                         anomaly_summary,
                         kpi_stats.to_dict('records')
                     )
+                    # Store narrative in session state for PDF generation
+                    st.session_state['narrative'] = narrative
                 
                 # Display narrative sections
                 st.markdown("### Executive Summary")

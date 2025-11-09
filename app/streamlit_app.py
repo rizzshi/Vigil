@@ -187,6 +187,23 @@ def main():
         help="Compare different time periods"
     )
     
+    st.sidebar.markdown("---")
+    
+    # Data Filtering Options
+    st.sidebar.subheader("🔍 Data Filtering")
+    
+    enable_date_filter = st.sidebar.checkbox(
+        "Filter by Date Range",
+        value=False,
+        help="Analyze specific date range only"
+    )
+    
+    enable_kpi_filter = st.sidebar.checkbox(
+        "Select Specific KPIs",
+        value=False,
+        help="Analyze only selected KPIs"
+    )
+    
     # Main content area
     if uploaded_file is None:
         # Welcome screen

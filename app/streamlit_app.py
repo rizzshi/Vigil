@@ -285,7 +285,14 @@ date,revenue,customer_acquisition,churn_rate
                     if not details_df.empty:
                         # Format the dataframe
                         details_df['date'] = pd.to_datetime(details_df['date']).dt.strftime('%Y-%m-%d')
-                        st.markdown(details_df.to_html(index=False), unsafe_allow_html=True)
+                        
+                        # Show first 10 rows by default
+                        st.markdown(details_df.head(10).to_html(index=False), unsafe_allow_html=True)
+                        
+                        # Add expander for remaining rows if there are more than 10
+                        if len(details_df) > 10:
+                            with st.expander(f"📊 View All {len(details_df)} Anomalies (Click to expand)"):
+                                st.markdown(details_df.to_html(index=False), unsafe_allow_html=True)
                     
                     # Visualizations
                     st.subheader("📈 Visualizations")

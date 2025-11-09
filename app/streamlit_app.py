@@ -347,6 +347,15 @@ date,revenue,customer_acquisition,churn_rate
                     progress_bar.progress(100)
                     
                     st.success("✅ Analysis complete!")
+                    
+                    # Store results in session state
+                    st.session_state['analysis_complete'] = True
+                    st.session_state['data'] = data
+                    st.session_state['date_column'] = date_column
+                    st.session_state['detector'] = detector
+                    st.session_state['anomaly_summary'] = anomaly_summary
+                    st.session_state['kpi_stats'] = kpi_stats
+                    st.session_state['use_openai'] = use_openai
                 
                 # Display results
                 st.subheader("🎯 Analysis Results")

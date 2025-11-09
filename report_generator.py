@@ -89,6 +89,17 @@ class ReportGenerator:
             fontName='Helvetica-Bold'
         ))
         
+        # Subheading style
+        self.styles.add(ParagraphStyle(
+            name='AlgorzenSubheading',
+            parent=self.styles['Heading2'],
+            fontSize=14,
+            textColor=colors.HexColor('#34495e'),
+            spaceAfter=10,
+            spaceBefore=15,
+            fontName='Helvetica-Bold'
+        ))
+        
         # Body text style
         self.styles.add(ParagraphStyle(
             name='AlgorzenBody',

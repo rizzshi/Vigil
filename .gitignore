@@ -1,0 +1,19 @@
+# Algorzen Vigil
+.env
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+reports/*.png
+.DS_Store
+.vscode/
+.idea/
+*.log
+.ipynb_checkpoints/

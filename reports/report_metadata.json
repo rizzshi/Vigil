@@ -1,0 +1,20 @@
+{
+  "project": "Algorzen Vigil",
+  "report_id": "VIGIL-2025-Q4-1110",
+  "generated_by": "Rishi Singh",
+  "created_at": "2025-11-10T03:09:03.765657",
+  "tone": "Executive Business",
+  "openai_used": false,
+  "report_file": "Vigil_Report_2025-11-10.pdf",
+  "anomaly_summary": {
+    "total_anomalies": 21,
+    "severity": "High",
+    "affected_kpis": [
+      "churn_rate",
+      "api_latency",
+      "customer_acquisition",
+      "revenue",
+      "server_uptime"
+    ]
+  }
+}

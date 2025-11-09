@@ -735,53 +735,69 @@ date,revenue,customer_acquisition,churn_rate
                             use_container_width=True
                         )
                 
-                if st.button("Generate PDF Report", type="primary", use_container_width=True):
+                if st.button("Generate PDF Report", type="primary", use_container_width=True, key="generate_pdf_btn"):
                     
-                    with st.spinner("Generating PDF report..."):
-                        # Create charts
-                        charts = []
-                        
-                        summary_chart = report_gen.create_anomaly_summary_chart(anomaly_summary)
-                        if os.path.exists(summary_chart):
-                            charts.append(summary_chart)
-                        
-                        for kpi in anomaly_summary['affected_kpis'][:3]:
-                            anomaly_indices = []
-                            for detail in anomaly_summary['details']:
-                                if detail['kpi'] == kpi:
-                                    idx = data[data[date_column] == detail['date']].index
-                                    if len(idx) > 0:
-                                        anomaly_indices.append(idx[0])
+                    # Get data from session state to ensure persistence
+                    data = st.session_state.get('data')
+                    date_column = st.session_state.get('date_column')
+                    anomaly_summary = st.session_state.get('anomaly_summary')
+                    kpi_stats = st.session_state.get('kpi_stats')
+                    narrative = st.session_state.get('narrative')
+                    use_openai = st.session_state.get('use_openai')
+                    
+                    if data is not None and anomaly_summary is not None:
+                        with st.spinner("Generating PDF report..."):
+                            # Initialize report generator
+                            report_gen = ReportGenerator(output_dir="reports")
                             
-                            if anomaly_indices:
-                                chart_path = report_gen.create_time_series_chart(
-                                    data, kpi, anomaly_indices, date_column=date_column
-                                )
-                                if os.path.exists(chart_path):
-                                    charts.append(chart_path)
-                        
-                        # Generate PDF
-                        report_path = report_gen.generate_pdf_report(
-                            data=data,
-                            anomaly_summary=anomaly_summary,
-                            narrative=narrative,
-                            kpi_stats=kpi_stats,
-                            charts=charts,
-                            use_openai=use_openai
-                        )
-                    
-                    st.success(f"✅ Report generated: {report_path}")
-                    
-                    # Download button
-                    if os.path.exists(report_path):
-                        with open(report_path, 'rb') as f:
-                            st.download_button(
-                                label="📥 Download PDF Report",
-                                data=f,
-                                file_name=os.path.basename(report_path),
-                                mime="application/pdf",
-                                use_container_width=True
+                            # Create charts
+                            charts = []
+                            
+                            summary_chart = report_gen.create_anomaly_summary_chart(anomaly_summary)
+                            if os.path.exists(summary_chart):
+                                charts.append(summary_chart)
+                            
+                            for kpi in anomaly_summary['affected_kpis'][:3]:
+                                anomaly_indices = []
+                                for detail in anomaly_summary['details']:
+                                    if detail['kpi'] == kpi:
+                                        idx = data[data[date_column] == detail['date']].index
+                                        if len(idx) > 0:
+                                            anomaly_indices.append(idx[0])
+                                
+                                if anomaly_indices:
+                                    chart_path = report_gen.create_time_series_chart(
+                                        data, kpi, anomaly_indices, date_column=date_column
+                                    )
+                                    if os.path.exists(chart_path):
+                                        charts.append(chart_path)
+                            
+                            # Generate PDF
+                            report_path = report_gen.generate_pdf_report(
+                                data=data,
+                                anomaly_summary=anomaly_summary,
+                                narrative=narrative,
+                                kpi_stats=kpi_stats,
+                                charts=charts,
+                                use_openai=use_openai
                             )
+                            
+                            # Store report path in session state
+                            st.session_state['report_path'] = report_path
+                        
+                        st.success(f"✅ Report generated: {report_path}")
+                
+                # Show download button if report was generated
+                if 'report_path' in st.session_state and os.path.exists(st.session_state['report_path']):
+                    with open(st.session_state['report_path'], 'rb') as f:
+                        st.download_button(
+                            label="📥 Download PDF Report",
+                            data=f,
+                            file_name=os.path.basename(st.session_state['report_path']),
+                            mime="application/pdf",
+                            use_container_width=True,
+                            key="download_pdf_btn"
+                        )
         
         except Exception as e:
             st.error(f"Error processing file: {str(e)}")

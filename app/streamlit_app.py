@@ -356,6 +356,16 @@ date,revenue,customer_acquisition,churn_rate
                     st.session_state['anomaly_summary'] = anomaly_summary
                     st.session_state['kpi_stats'] = kpi_stats
                     st.session_state['use_openai'] = use_openai
+            
+            # Display results if analysis is complete
+            if st.session_state.get('analysis_complete', False):
+                # Retrieve data from session state
+                data = st.session_state['data']
+                date_column = st.session_state['date_column']
+                detector = st.session_state['detector']
+                anomaly_summary = st.session_state['anomaly_summary']
+                kpi_stats = st.session_state['kpi_stats']
+                use_openai = st.session_state['use_openai']
                 
                 # Display results
                 st.subheader("🎯 Analysis Results")

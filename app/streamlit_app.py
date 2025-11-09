@@ -307,7 +307,7 @@ date,revenue,customer_acquisition,churn_rate
                 
                 # KPI Statistics
                 st.subheader("📊 KPI Statistics")
-                st.dataframe(kpi_stats, use_container_width=True)
+                st.write(kpi_stats)
                 
                 # Generate Report button
                 st.subheader("📄 Generate PDF Report")

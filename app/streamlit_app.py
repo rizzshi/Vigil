@@ -368,10 +368,17 @@ date,revenue,customer_acquisition,churn_rate
                         'Medium': '🟠',
                         'High': '🔴'
                     }
+                    severity_msg = {
+                        'None': 'No issues detected',
+                        'Low': 'Minor variations observed',
+                        'Medium': 'Attention recommended',
+                        'High': 'Immediate review required'
+                    }
                     st.metric(
                         "Severity",
                         f"{severity_color.get(anomaly_summary['severity'], '⚪')} {anomaly_summary['severity']}",
-                        delta=None
+                        delta=None,
+                        help=severity_msg.get(anomaly_summary['severity'], '')
                     )
                 
                 with col3:

@@ -158,6 +158,35 @@ def main():
         help="Enable AI-powered explanations (requires OPENAI_API_KEY)"
     )
     
+    st.sidebar.markdown("---")
+    
+    # Advanced Analytics Options
+    st.sidebar.subheader("🔬 Advanced Analytics")
+    
+    show_correlation = st.sidebar.checkbox(
+        "KPI Correlation Analysis",
+        value=True,
+        help="Show correlation heatmap between KPIs"
+    )
+    
+    show_distribution = st.sidebar.checkbox(
+        "Distribution Analysis",
+        value=True,
+        help="Show KPI distribution plots"
+    )
+    
+    show_trend = st.sidebar.checkbox(
+        "Trend Analysis",
+        value=True,
+        help="Show trend decomposition and forecasting"
+    )
+    
+    show_comparison = st.sidebar.checkbox(
+        "Period Comparison",
+        value=False,
+        help="Compare different time periods"
+    )
+    
     # Main content area
     if uploaded_file is None:
         # Welcome screen

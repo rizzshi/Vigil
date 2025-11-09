@@ -259,8 +259,8 @@ class ReportGenerator:
         Returns:
             Path to the generated PDF report
         """
-        # Generate report filename
-        timestamp = datetime.now().strftime("%Y-%m-%d")
+        # Generate report filename with timestamp to avoid overwriting
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_filename = f"Vigil_Report_{timestamp}.pdf"
         report_path = os.path.join(self.output_dir, report_filename)
         

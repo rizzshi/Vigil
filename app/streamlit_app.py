@@ -243,6 +243,45 @@ date,revenue,customer_acquisition,churn_rate
             # Load data
             data = pd.read_csv(uploaded_file)
             
+            # Apply date filter if enabled
+            if enable_date_filter and date_column in data.columns:
+                data[date_column] = pd.to_datetime(data[date_column])
+                min_date = data[date_column].min().date()
+                max_date = data[date_column].max().date()
+                
+                st.sidebar.markdown("#### Date Range")
+                date_range = st.sidebar.date_input(
+                    "Select date range",
+                    value=(min_date, max_date),
+                    min_value=min_date,
+                    max_value=max_date
+                )
+                
+                if len(date_range) == 2:
+                    data = data[(data[date_column].dt.date >= date_range[0]) & 
+                               (data[date_column].dt.date <= date_range[1])]
+                    st.sidebar.success(f"Filtered to {len(data)} records")
+            
+            # Apply KPI filter if enabled
+            if enable_kpi_filter:
+                numeric_cols = data.select_dtypes(include=['number']).columns.tolist()
+                if numeric_cols:
+                    st.sidebar.markdown("#### Select KPIs")
+                    selected_kpis = st.sidebar.multiselect(
+                        "Choose KPIs to analyze",
+                        numeric_cols,
+                        default=numeric_cols
+                    )
+                    
+                    if selected_kpis:
+                        # Keep date column and selected KPIs
+                        cols_to_keep = [date_column] + selected_kpis if date_column in data.columns else selected_kpis
+                        data = data[cols_to_keep]
+                        st.sidebar.success(f"Analyzing {len(selected_kpis)} KPIs")
+                    else:
+                        st.sidebar.warning("Please select at least one KPI")
+                        return
+            
             # Display data preview
             st.subheader("📊 Data Preview")
             st.markdown(data.head(10).to_html(), unsafe_allow_html=True)

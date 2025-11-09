@@ -286,7 +286,28 @@ date,revenue,customer_acquisition,churn_rate
                         return
             
             # Display data preview
-            st.subheader("📊 Data Preview")
+            st.subheader("📊 Data Overview")
+            
+            # Key metrics dashboard
+            overview_cols = st.columns(5)
+            overview_cols[0].metric("📅 Total Days", len(data))
+            overview_cols[1].metric("📊 Total Columns", len(data.columns))
+            
+            numeric_cols = data.select_dtypes(include=['number']).columns
+            overview_cols[2].metric("📈 Numeric KPIs", len(numeric_cols))
+            
+            if date_column in data.columns:
+                date_range_days = (pd.to_datetime(data[date_column]).max() - 
+                                  pd.to_datetime(data[date_column]).min()).days
+                overview_cols[3].metric("📆 Date Range", f"{date_range_days} days")
+            else:
+                overview_cols[3].metric("📆 Date Range", "N/A")
+            
+            # Data completeness
+            completeness = (1 - data.isnull().sum().sum() / (len(data) * len(data.columns))) * 100
+            overview_cols[4].metric("✅ Completeness", f"{completeness:.1f}%")
+            
+            st.markdown("### Data Preview")
             st.markdown(data.head(10).to_html(), unsafe_allow_html=True)
             
             col1, col2, col3 = st.columns(3)

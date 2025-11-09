@@ -474,6 +474,83 @@ class ReportGenerator:
         story.append(stats_table)
         story.append(Spacer(1, 0.3 * inch))
         
+        # Advanced Analytics Section
+        if detector is not None:
+            story.append(PageBreak())
+            story.append(Paragraph("Advanced Analytics", self.styles['AlgorzenHeading']))
+            story.append(Spacer(1, 0.2 * inch))
+            
+            # Correlation Analysis
+            story.append(Paragraph("Correlation Analysis", self.styles['AlgorzenSubheading']))
+            try:
+                corr_chart = self.create_correlation_heatmap(data, detector.numeric_columns)
+                if os.path.exists(corr_chart):
+                    img = Image(corr_chart, width=6*inch, height=4.5*inch)
+                    story.append(img)
+                    story.append(Spacer(1, 0.2 * inch))
+                    
+                    # Find strong correlations
+                    numeric_data = data[detector.numeric_columns]
+                    correlation_matrix = numeric_data.corr()
+                    strong_corr = []
+                    for i in range(len(correlation_matrix.columns)):
+                        for j in range(i+1, len(correlation_matrix.columns)):
+                            corr_value = correlation_matrix.iloc[i, j]
+                            if abs(corr_value) > 0.7:
+                                strong_corr.append(f"• {correlation_matrix.columns[i]} ↔ {correlation_matrix.columns[j]}: {corr_value:.2f}")
+                    
+                    if strong_corr:
+                        story.append(Paragraph(f"<b>Strong Correlations Found (|r| > 0.7):</b>", self.styles['AlgorzenBody']))
+                        for corr_text in strong_corr[:5]:  # Limit to top 5
+                            story.append(Paragraph(corr_text, self.styles['AlgorzenBody']))
+                    else:
+                        story.append(Paragraph("No strong correlations found (|r| > 0.7)", self.styles['AlgorzenBody']))
+                    
+                    story.append(Spacer(1, 0.3 * inch))
+            except Exception as e:
+                story.append(Paragraph(f"Could not generate correlation analysis: {str(e)}", self.styles['AlgorzenBody']))
+                story.append(Spacer(1, 0.2 * inch))
+            
+            # Distribution Analysis for top KPI
+            if len(detector.numeric_columns) > 0:
+                story.append(Paragraph("Distribution Analysis", self.styles['AlgorzenSubheading']))
+                top_kpi = detector.numeric_columns[0]  # Analyze first KPI
+                try:
+                    dist_chart = self.create_distribution_analysis(data, top_kpi)
+                    if os.path.exists(dist_chart):
+                        img = Image(dist_chart, width=6*inch, height=2*inch)
+                        story.append(img)
+                        story.append(Spacer(1, 0.2 * inch))
+                        
+                        # Statistical summary
+                        stats_data = data[top_kpi].describe()
+                        summary_text = f"<b>{top_kpi} Statistics:</b> Mean={stats_data['mean']:.2f}, Median={data[top_kpi].median():.2f}, Std={stats_data['std']:.2f}, Skewness={data[top_kpi].skew():.2f}"
+                        story.append(Paragraph(summary_text, self.styles['AlgorzenBody']))
+                        story.append(Spacer(1, 0.3 * inch))
+                except Exception as e:
+                    story.append(Paragraph(f"Could not generate distribution analysis: {str(e)}", self.styles['AlgorzenBody']))
+                    story.append(Spacer(1, 0.2 * inch))
+            
+            # Trend Decomposition for top KPI
+            if len(detector.numeric_columns) > 0 and date_column in data.columns:
+                story.append(Paragraph("Trend Decomposition", self.styles['AlgorzenSubheading']))
+                top_kpi = detector.numeric_columns[0]
+                try:
+                    decomp = detector.seasonal_analysis(top_kpi, period=7)
+                    if decomp.get('trend') is not None:
+                        trend_chart = self.create_trend_decomposition(data, date_column, top_kpi, decomp)
+                        if os.path.exists(trend_chart):
+                            img = Image(trend_chart, width=6*inch, height=5*inch)
+                            story.append(img)
+                            story.append(Spacer(1, 0.2 * inch))
+                            story.append(Paragraph(f"Seasonal decomposition analysis for {top_kpi} showing trend, seasonal patterns, and residual components.", self.styles['AlgorzenBody']))
+                    else:
+                        story.append(Paragraph(decomp.get('message', 'Could not perform seasonal decomposition'), self.styles['AlgorzenBody']))
+                    story.append(Spacer(1, 0.3 * inch))
+                except Exception as e:
+                    story.append(Paragraph(f"Could not generate trend decomposition: {str(e)}", self.styles['AlgorzenBody']))
+                    story.append(Spacer(1, 0.2 * inch))
+        
         # Add charts
         if charts:
             story.append(PageBreak())

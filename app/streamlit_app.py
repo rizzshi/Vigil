@@ -219,6 +219,9 @@ def main():
             - **🤖 AI-Powered Insights**: GPT-4 driven executive summaries
             - **📄 Professional Reports**: Branded PDF reports with metadata
             - **📈 KPI Statistics**: Comprehensive statistical analysis
+            - **🔬 Advanced Analytics**: Correlation, distribution, and trend analysis
+            - **🔍 Data Filtering**: Date range and KPI selection
+            - **📥 Multiple Export Formats**: CSV, JSON, and PDF
             """)
             
             st.subheader("Quick Start")

@@ -165,7 +165,7 @@ date,revenue,customer_acquisition,churn_rate
             
             # Display data preview
             st.subheader("📊 Data Preview")
-            st.dataframe(data.head(10), use_container_width=True)
+            st.write(data.head(10))
             
             col1, col2, col3 = st.columns(3)
             with col1:

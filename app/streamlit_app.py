@@ -254,7 +254,7 @@ date,revenue,customer_acquisition,churn_rate
                     if not details_df.empty:
                         # Format the dataframe
                         details_df['date'] = pd.to_datetime(details_df['date']).dt.strftime('%Y-%m-%d')
-                        st.dataframe(details_df, use_container_width=True)
+                        st.write(details_df)
                     
                     # Visualizations
                     st.subheader("📈 Visualizations")

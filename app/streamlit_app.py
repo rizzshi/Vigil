@@ -8,7 +8,10 @@ Interactive web interface for drift detection and anomaly analysis.
 import streamlit as st
 import pandas as pd
 import os
+import numpy as np
 from datetime import datetime
+import matplotlib.pyplot as plt
+import seaborn as sns
 from drift_detector import DriftDetector
 from anomaly_explainer import AnomalyExplainer
 from report_generator import ReportGenerator

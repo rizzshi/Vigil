@@ -329,7 +329,9 @@ class ReportGenerator:
         kpi_stats: pd.DataFrame,
         charts: List[str] = None,
         report_id: str = None,
-        use_openai: bool = False
+        use_openai: bool = False,
+        detector = None,
+        date_column: str = 'date'
     ) -> str:
         """
         Generate the complete PDF report.
@@ -342,6 +344,8 @@ class ReportGenerator:
             charts: List of chart image paths to include
             report_id: Custom report ID (auto-generated if None)
             use_openai: Whether OpenAI was used for analysis
+            detector: DriftDetector instance for advanced analytics
+            date_column: Name of the date column
             
         Returns:
             Path to the generated PDF report

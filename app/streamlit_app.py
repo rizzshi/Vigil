@@ -773,13 +773,16 @@ date,revenue,customer_acquisition,churn_rate
                                         charts.append(chart_path)
                             
                             # Generate PDF
+                            detector = st.session_state.get('detector')
                             report_path = report_gen.generate_pdf_report(
                                 data=data,
                                 anomaly_summary=anomaly_summary,
                                 narrative=narrative,
                                 kpi_stats=kpi_stats,
                                 charts=charts,
-                                use_openai=use_openai
+                                use_openai=use_openai,
+                                detector=detector,
+                                date_column=date_column
                             )
                             
                             # Store report path in session state

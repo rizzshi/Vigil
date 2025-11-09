@@ -234,6 +234,93 @@ class ReportGenerator:
         
         return output_path
     
+    def create_correlation_heatmap(self, data: pd.DataFrame, numeric_columns: List[str], output_path: str = None) -> str:
+        """Create correlation heatmap for KPIs."""
+        numeric_data = data[numeric_columns]
+        correlation_matrix = numeric_data.corr()
+        
+        fig, ax = plt.subplots(figsize=(10, 8))
+        sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', 
+                   center=0, square=True, linewidths=1, 
+                   cbar_kws={"shrink": 0.8}, fmt='.2f', ax=ax)
+        plt.title('KPI Correlation Heatmap', fontsize=14, fontweight='bold', pad=20)
+        plt.tight_layout()
+        
+        if output_path is None:
+            output_path = os.path.join(self.output_dir, f'correlation_heatmap_{datetime.now().strftime("%Y%m%d_%H%M%S")}.png')
+        
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        return output_path
+    
+    def create_distribution_analysis(self, data: pd.DataFrame, kpi: str, output_path: str = None) -> str:
+        """Create distribution analysis charts (histogram and box plot)."""
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+        
+        # Histogram
+        ax1.hist(data[kpi].dropna(), bins=30, color='#3498db', edgecolor='black', alpha=0.7)
+        ax1.set_xlabel(kpi, fontweight='bold')
+        ax1.set_ylabel('Frequency', fontweight='bold')
+        ax1.set_title(f'{kpi} - Distribution', fontweight='bold')
+        ax1.grid(alpha=0.3)
+        
+        # Box plot
+        ax2.boxplot(data[kpi].dropna(), vert=True)
+        ax2.set_ylabel(kpi, fontweight='bold')
+        ax2.set_title(f'{kpi} - Box Plot', fontweight='bold')
+        ax2.grid(alpha=0.3, axis='y')
+        
+        plt.tight_layout()
+        
+        if output_path is None:
+            output_path = os.path.join(self.output_dir, f'distribution_{kpi}_{datetime.now().strftime("%Y%m%d_%H%M%S")}.png')
+        
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        return output_path
+    
+    def create_trend_decomposition(self, data: pd.DataFrame, date_column: str, kpi: str, 
+                                   decomp: Dict, output_path: str = None) -> str:
+        """Create seasonal decomposition chart."""
+        fig, axes = plt.subplots(4, 1, figsize=(12, 10))
+        
+        # Original
+        axes[0].plot(data[date_column], data[kpi], color='#2c3e50', linewidth=2)
+        axes[0].set_title('Original Time Series', fontweight='bold')
+        axes[0].grid(alpha=0.3)
+        axes[0].set_ylabel(kpi)
+        
+        # Trend
+        axes[1].plot(decomp['trend'], color='#e74c3c', linewidth=2)
+        axes[1].set_title('Trend Component', fontweight='bold')
+        axes[1].grid(alpha=0.3)
+        axes[1].set_ylabel('Trend')
+        
+        # Seasonal
+        axes[2].plot(decomp['seasonal'], color='#3498db', linewidth=2)
+        axes[2].set_title('Seasonal Component', fontweight='bold')
+        axes[2].grid(alpha=0.3)
+        axes[2].set_ylabel('Seasonal')
+        
+        # Residual
+        axes[3].plot(decomp['residual'], color='#2ecc71', linewidth=2)
+        axes[3].set_title('Residual Component', fontweight='bold')
+        axes[3].grid(alpha=0.3)
+        axes[3].set_ylabel('Residual')
+        axes[3].set_xlabel('Time')
+        
+        plt.tight_layout()
+        
+        if output_path is None:
+            output_path = os.path.join(self.output_dir, f'trend_decomp_{kpi}_{datetime.now().strftime("%Y%m%d_%H%M%S")}.png')
+        
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        return output_path
+    
     def generate_pdf_report(
         self,
         data: pd.DataFrame,

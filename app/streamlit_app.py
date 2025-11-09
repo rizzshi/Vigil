@@ -52,6 +52,37 @@ st.markdown("""
         padding: 1rem;
         border-top: 1px solid #ddd;
     }
+    /* Table styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 0.9em;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }
+    table thead tr {
+        background-color: #2c3e50;
+        color: #ffffff;
+        text-align: left;
+    }
+    table th,
+    table td {
+        padding: 12px 15px;
+    }
+    table tbody tr {
+        border-bottom: 1px solid #dddddd;
+    }
+    table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+    }
+    table tbody tr:last-of-type {
+        border-bottom: 2px solid #2c3e50;
+    }
+    table tbody tr:hover {
+        background-color: #e8f4f8;
+        cursor: pointer;
+    }
     </style>
 """, unsafe_allow_html=True)
 

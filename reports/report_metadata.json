@@ -1,0 +1,22 @@
+{
+  "project": "Algorzen Vigil",
+  "report_id": "VIGIL-2025-Q4-1110",
+  "generated_by": "Rishi Singh",
+  "created_at": "2025-11-10T03:46:14.993274",
+  "tone": "Executive Business",
+  "openai_used": false,
+  "report_file": "Vigil_Report_20251110_034610.pdf",
+  "anomaly_summary": {
+    "total_anomalies": 4339,
+    "severity": "High",
+    "affected_kpis": [
+      "unit_price",
+      "subtotal",
+      "profit_margin",
+      "quantity",
+      "discount_pct",
+      "discount_amount",
+      "total_revenue"
+    ]
+  }
+}

@@ -307,7 +307,7 @@ date,revenue,customer_acquisition,churn_rate
                 
                 # KPI Statistics
                 st.subheader("📊 KPI Statistics")
-                st.write(kpi_stats)
+                st.markdown(kpi_stats.to_html(index=False), unsafe_allow_html=True)
                 
                 # Generate Report button
                 st.subheader("📄 Generate PDF Report")

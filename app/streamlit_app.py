@@ -165,7 +165,7 @@ date,revenue,customer_acquisition,churn_rate
             
             # Display data preview
             st.subheader("📊 Data Preview")
-            st.write(data.head(10))
+            st.markdown(data.head(10).to_html(), unsafe_allow_html=True)
             
             col1, col2, col3 = st.columns(3)
             with col1:
